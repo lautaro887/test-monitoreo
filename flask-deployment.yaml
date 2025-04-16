@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-metrics-app
+  namespace: test-monitoreo
+  labels:
+    app: simple-metrics-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-metrics-app
+  template:
+    metadata:
+      labels:
+        app: simple-metrics-app
+    spec:
+      containers:
+      - name: app
+        image: prom/python-metrics-example  # Imagen correcta
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 5
